@@ -1,0 +1,151 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body {
+  font-family: Roboto, Helvetica, sans-serif;
+  background-color: #000;
+  color: #fff;
+  text-shadow: 1px 1px 1px #333;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+.container {
+  margin-top: 20px;
+  display: flex;
+  width: 100%;
+}
+#todaysDate {
+  display: flex;
+  gap: 20px;
+}
+#time {
+  font-size: 4rem;
+  font-weight: 900;
+  color: orangered;
+}
+#date {
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 2rem;
+  padding: 5px;
+  color: orangered;
+}
+.calendar {
+  width: 65%;
+  height: 95vh;
+  font-size: 1.5rem;
+}
+.calendarRow {
+  padding: 5px 10px;
+}
+.eventRow {
+  display: flex;
+  margin: 5px;
+  margin-left: 25px;
+}
+.dayoftheMonth {
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 2rem;
+  padding: 5px;
+  color: orangered;
+}
+.eventRow:nth-child(2n) {
+  background-color: #111;
+}
+.calendarSummary {
+  width: 600px;
+  padding: 5px;
+  font-weight: 900;
+  flex-grow: 1;
+}
+.calendarTime {
+  padding: 5px;
+  min-width: 170px;
+}
+#weather {
+  font-family: Roboto, sans-serif;
+  width: 35%;
+  margin: 10px 10px 0px 10px;
+  font-size: 1.25rem;
+  list-style: none;
+}
+.forecastWeatherIcon img {
+  vertical-align: top;
+  height: 75px;
+}
+.forecastDescription {
+  text-transform: capitalize;
+  font-style: italic;
+  font-size: 16px;
+}
+.currentTemp {
+  font-size: 3rem;
+  font-weight: bold;
+  color: yellow;
+}
+.feelsTemp {
+  font-style: italic;
+}
+#currentWindDirection {
+  height: 50px;
+  width: 50px;
+  font-size: 3rem;
+  margin: 0px 5px;
+}
+.weatherTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: orangered;
+  text-transform: uppercase;
+}
+.date-top {
+  font-size: 2rem;
+}
+.rows {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0px 10px;
+  margin: 15px 0px;
+}
+/* .rows > div:nth-child(1) {
+  width: 125px;
+} */
+.description {
+  text-transform: capitalize;
+  font-size: 1.5rem;
+  font-style: italic;
+  /* margin-left: 120px; */
+  padding: 5px;
+}
+.moonPhase {
+  height: 50px;
+  width: 50px;
+}
+.dayWeather {
+  padding: 0px 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.dayWeather:nth-child(2n) {
+  background-color: #333;
+}
+.dayTemp {
+  align-self: center;
+}
+.dayDate {
+  width: 210px;
+  align-self: center;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
