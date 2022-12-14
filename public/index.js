@@ -15,59 +15,6 @@ async function getData(url) {
   return data;
 }
 
-async function getCalendarData(account) {
-  const calendarURL = `/api/calendar/${account}`;
-  const data = await getData(calendarURL);
-  const finalListofEvents = data.reduce(function (obj, day) {
-    const theday = day.formattedDate;
-    if (!obj[theday]) {
-      obj[theday] = { events: [day] };
-    } else {
-      obj[theday]['events'].push(day);
-    }
-    return obj;
-  }, {});
-
-  let dayDetails = '';
-  for (days in finalListofEvents) {
-    let eventDetails = '';
-    finalListofEvents[days]['events'].forEach((event) => {
-      const calendarTime = new Date(event.sortDate);
-      let startTime = calendarTime.toTimeString().split(':').slice(0, 2).join(':');
-      let endTime = new Date(event.endTime).toTimeString().split(':').slice(0, 2).join(':');
-      if (event.allDayEvent) {
-        startTime = '';
-        endTime = '';
-      }
-      // const endTime = (calendarTime + 1000 * 30 * 60).toLocaleTimeString();
-      const summary = event.summary.toUpperCase();
-      eventDetails += `<div class='eventRow'><div class='calendarSummary'>${summary}</div><div class='calendarTime'>${startTime} - ${endTime}</div></div>`;
-    });
-    const dayNameList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const monthNameList = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const offset = new Date().getTimezoneOffset();
-    const convertedDate = new Date(Date.parse(days) + offset * 60 * 1000);
-    const monthName = monthNameList[convertedDate.getMonth()];
-    const dayofMonth = convertedDate.getDate();
-    const dayName = dayNameList[convertedDate.getDay()];
-    dayDetails += `<div class='calendarRow'><div class="dayoftheMonth">${dayName}, ${monthName} ${dayofMonth}</div>${eventDetails}</div>`;
-  }
-  document.getElementById('calendar').innerHTML = dayDetails;
-}
-
 function createDateComponents(dateNum, utc) {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -171,6 +118,64 @@ async function moonPhase(moonURL) {
   const moonData = await getData(moonURL);
   let htmlCurrent = `<div class="rows"><div>Moon Phase:</div><div class="moonPhase"><svg width="50" height="50" viewBox="0 0 100 100">${moonData.svg}</svg></div><div>${moonData.npWidget}</div></div>`;
   document.getElementById('moonphase').innerHTML = htmlCurrent;
+}
+
+async function getCalendarData(account) {
+  if (!account) {
+    document.getElementById('calendar').innerHTML =
+      "<div class='calendarRow'><div class='dayoftheMonth'>NEED AN ACCOUNT.</div></div>";
+    return;
+  }
+  const calendarURL = `/api/calendar/${account}`;
+  const data = await getData(calendarURL);
+  const finalListofEvents = data.reduce(function (obj, day) {
+    const theday = day.formattedDate;
+    if (!obj[theday]) {
+      obj[theday] = { events: [day] };
+    } else {
+      obj[theday]['events'].push(day);
+    }
+    return obj;
+  }, {});
+
+  let dayDetails = '';
+  for (days in finalListofEvents) {
+    let eventDetails = '';
+    finalListofEvents[days]['events'].forEach((event) => {
+      const calendarTime = new Date(event.sortDate);
+      let startTime = calendarTime.toTimeString().split(':').slice(0, 2).join(':');
+      let endTime = new Date(event.endTime).toTimeString().split(':').slice(0, 2).join(':');
+      if (event.allDayEvent) {
+        startTime = '';
+        endTime = '';
+      }
+      // const endTime = (calendarTime + 1000 * 30 * 60).toLocaleTimeString();
+      const summary = event.summary.toUpperCase();
+      eventDetails += `<div class='eventRow'><div class='calendarSummary'>${summary}</div><div class='calendarTime'>${startTime} - ${endTime}</div></div>`;
+    });
+    const dayNameList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const monthNameList = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const offset = new Date().getTimezoneOffset();
+    const convertedDate = new Date(Date.parse(days) + offset * 60 * 1000);
+    const monthName = monthNameList[convertedDate.getMonth()];
+    const dayofMonth = convertedDate.getDate();
+    const dayName = dayNameList[convertedDate.getDay()];
+    dayDetails += `<div class='calendarRow'><div class="dayoftheMonth">${dayName}, ${monthName} ${dayofMonth}</div>${eventDetails}</div>`;
+  }
+  document.getElementById('calendar').innerHTML = dayDetails;
 }
 
 currentWeatherHTML(currentURL);
