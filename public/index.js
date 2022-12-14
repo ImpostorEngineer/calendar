@@ -4,7 +4,7 @@ const account = urlParams.get('account');
 const lon = '-73.4529';
 const lat = '44.6995';
 // const URL = `https://api.openweathermap.org/forecastData/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-const iconURL = 'http://openweathermap.org/img/wn/';
+const iconURL = 'https://openweathermap.org/img/wn/';
 
 const currentURL = '/api/current';
 const forecastURL = '/api/forecast';
