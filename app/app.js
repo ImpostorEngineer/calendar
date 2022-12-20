@@ -10,8 +10,8 @@ const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 const GOOGLE_PRIVATE_KEY = keys.private_key;
 const GOOGLE_CLIENT_EMAIL = keys.client_email;
 const GOOGLE_PROJECT_NUMBER = keys.project_id;
-const GOOGLE_CALENDAR_ID1 = 'idemirer@gmail.com';
-const GOOGLE_CALENDAR_ID2 = 'idemi001@plattsburgh.edu';
+const GOOGLE_CALENDAR_ID1 = process.env.GOOGLE_CALENDAR_ID1;
+const GOOGLE_CALENDAR_ID2 = process.env.GOOGLE_CALENDAR_ID2;
 
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 
