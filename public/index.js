@@ -192,8 +192,8 @@ setInterval(() => {
   currentWeatherHTML(currentURL);
   weatherForecastHTML(forecastURL);
   getCalendarData(account);
-}, 60000);
+}, 300000);
 
 setInterval(() => {
   moonPhase(moonURL);
-}, 86400000);
+}, 21600000);
