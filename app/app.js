@@ -15,9 +15,6 @@ const GOOGLE_CALENDAR_ID2 = process.env.GOOGLE_CALENDAR_ID2;
 
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 
-const currentURL = `https://api.openweathermap.org/data/2.5/weather?q=Plattsburgh&appid=${OPENWEATHERMAP_API_KEY}&units=metric`;
-const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=Plattsburgh&appid=${OPENWEATHERMAP_API_KEY}&units=metric`;
-
 async function loadMoon(val) {
   const BASE_URL = 'https://www.icalendar37.net/lunar/api/?';
   let gets = [];
@@ -54,7 +51,7 @@ router.get('/calendar/:email', async (req, res, next) => {
     auth: jwtClient,
   });
   let results = [];
-  const calendarIdemirer = await calendar.events.list({
+  const calendar1 = await calendar.events.list({
     calendarId: GOOGLE_CALENDAR_ID1,
     timeMin: new Date().toISOString(),
     maxResults: 20,
@@ -62,7 +59,7 @@ router.get('/calendar/:email', async (req, res, next) => {
     showDeleted: false,
     orderBy: 'startTime',
   });
-  const calendarPlattsburgh = await calendar.events.list({
+  const calendar2 = await calendar.events.list({
     calendarId: GOOGLE_CALENDAR_ID2,
     timeMin: new Date().toISOString(),
     maxResults: 10,
@@ -70,7 +67,7 @@ router.get('/calendar/:email', async (req, res, next) => {
     showDeleted: false,
     orderBy: 'startTime',
   });
-  results.push(...calendarIdemirer.data.items, ...calendarPlattsburgh.data.items);
+  results.push(...calendar1.data.items, ...calendar2.data.items);
   for (let i = 0; i < results.length; i++) {
     if (results[i].start.dateTime) {
       results[i].allDayEvent = false;
@@ -94,11 +91,18 @@ router.get('/calendar/:email', async (req, res, next) => {
   res.json(results);
 });
 
-router.get('/forecast', async (req, res, next) => {
+router.get('/forecast/:lat/:lon', async (req, res, next) => {
+  const lat = req.params.lat;
+  const lon = req.params.lon;
+  const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}&units=metric`;
   const data = await axios.get(forecastURL);
   res.json(data.data);
 });
-router.get('/current', async (req, res, next) => {
+
+router.get('/current/:lat/:lon', async (req, res, next) => {
+  const lat = req.params.lat;
+  const lon = req.params.lon;
+  const currentURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}&units=metric`;
   const data = await axios.get(currentURL);
   res.json(data.data);
 });

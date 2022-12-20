@@ -6,9 +6,25 @@ const lat = '44.6995';
 // const URL = `https://api.openweathermap.org/forecastData/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 const iconURL = 'https://openweathermap.org/img/wn/';
 
-const currentURL = '/api/current';
-const forecastURL = '/api/forecast';
+// let currentURL = '/api/current';
+// let forecastURL = '/api/forecast';
 const moonURL = '/api/moon';
+
+function getLocation() {
+  function success(position) {
+    currentWeatherHTML(position);
+    weatherForecastHTML(position);
+  }
+
+  function error() {
+    let position = { coords: {} };
+    position['coords']['latitude'] = 40.7128;
+    position['coords']['longitude'] = -74.006;
+    currentWeatherHTML(position);
+    weatherForecastHTML(position);
+  }
+  navigator.geolocation.getCurrentPosition(success, error);
+}
 
 async function getData(url) {
   const data = await fetch(url).then((res) => res.json());
@@ -45,7 +61,9 @@ function getTime() {
   document.getElementById('date').innerHTML = `${dayOftheWeek},<br />${month} ${day}`;
 }
 
-async function weatherForecastHTML(forecastURL) {
+async function weatherForecastHTML(position) {
+  const forecastURL = `/api/forecast/${position.coords.latitude}/${position.coords.longitude}`;
+
   // http://openweathermap.org/img/wn/10d@2x.png
   const forecastData = await getData(forecastURL);
   forecastData.list.map((day, index, array) => {
@@ -87,7 +105,8 @@ async function weatherForecastHTML(forecastURL) {
   document.getElementById('forecast').innerHTML = htmlForecast;
 }
 
-async function currentWeatherHTML(currentURL) {
+async function currentWeatherHTML(position) {
+  const currentURL = `/api/current/${position.coords.latitude}/${position.coords.longitude}`;
   const forecastData = await getData(currentURL);
   let currentTemp = Math.round(forecastData.main.temp, 0);
   let currentFeelsTemp = Math.round(forecastData.main.feels_like, 0);
@@ -100,6 +119,7 @@ async function currentWeatherHTML(currentURL) {
   let windSpeed = Math.round(((forecastData.wind.speed * 60 * 60) / 1000) * 100) / 100;
   let windDirection = forecastData.wind.deg;
   let htmlCurrent = `
+  <div class="cityName">${forecastData.name}</div>
   <div class="description">${currentDescription}: ${tempMin}°C / ${tempMax}°C</div>
   <div class="rows">
     <div class="weatherIcon"><img src="${weatherIcon}" /></div>
@@ -178,8 +198,7 @@ async function getCalendarData(account) {
   document.getElementById('calendar').innerHTML = dayDetails;
 }
 
-currentWeatherHTML(currentURL);
-weatherForecastHTML(forecastURL);
+getLocation();
 getCalendarData(account);
 getTime();
 moonPhase(moonURL);
@@ -189,8 +208,7 @@ setInterval(() => {
 }, 6000);
 
 setInterval(() => {
-  currentWeatherHTML(currentURL);
-  weatherForecastHTML(forecastURL);
+  getLocation();
   getCalendarData(account);
 }, 300000);
 
