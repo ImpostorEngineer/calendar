@@ -38,12 +38,12 @@ function createDateComponents(dateNum, utc) {
     const offset = new Date().getTimezoneOffset();
     dateNum = dateNum + offset * 60;
   }
-  let date = new Date(dateNum * 1000);
-  let month = months[date.getMonth()];
-  let dayOftheWeek = days[date.getDay()];
-  let day = date.getDate();
-  let hour = date.getHours();
-  let mins = date.getMinutes().toString().padStart(2, '0');
+  const date = new Date(dateNum * 1000);
+  const month = months[date.getMonth()];
+  const dayOftheWeek = days[date.getDay()];
+  const day = date.getDate();
+  const hour = date.getHours();
+  const mins = date.getMinutes().toString().padStart(2, '0');
   // let dateTxt = `${dayOftheWeek}, ${month} ${day} ${hour}`;
   return { dayOftheWeek, month, day, hour, mins };
 }
@@ -52,9 +52,9 @@ function getTime() {
   const currentTime = new Date();
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  let month = months[currentTime.getMonth()];
-  let dayOftheWeek = days[currentTime.getDay()];
-  let day = currentTime.getDate();
+  const month = months[currentTime.getMonth()];
+  const dayOftheWeek = days[currentTime.getDay()];
+  const day = currentTime.getDate();
   const hour = currentTime.getHours();
   const mins = currentTime.getMinutes().toString().padStart(2, '0');
   document.getElementById('time').innerHTML = `${hour}:${mins}`;
@@ -108,17 +108,17 @@ async function weatherForecastHTML(position) {
 async function currentWeatherHTML(position) {
   const currentURL = `/api/current/${position.coords.latitude}/${position.coords.longitude}`;
   const forecastData = await getData(currentURL);
-  let currentTemp = Math.round(forecastData.main.temp, 0);
-  let currentFeelsTemp = Math.round(forecastData.main.feels_like, 0);
-  let currentDescription = forecastData.weather[0].description;
-  let currentIconData = forecastData.weather[0].icon;
-  let weatherIcon = `${iconURL}${currentIconData}@2x.png`;
-  let tempMin = Math.round(forecastData.main.temp_min, 0);
-  let tempMax = Math.round(forecastData.main.temp_max, 0);
-  let humidity = forecastData.main.humidity;
-  let windSpeed = Math.round(((forecastData.wind.speed * 60 * 60) / 1000) * 100) / 100;
-  let windDirection = forecastData.wind.deg;
-  let htmlCurrent = `
+  const currentTemp = Math.round(forecastData.main.temp, 0);
+  const currentFeelsTemp = Math.round(forecastData.main.feels_like, 0);
+  const currentDescription = forecastData.weather[0].description;
+  const currentIconData = forecastData.weather[0].icon;
+  const weatherIcon = `${iconURL}${currentIconData}@2x.png`;
+  const tempMin = Math.round(forecastData.main.temp_min, 0);
+  const tempMax = Math.round(forecastData.main.temp_max, 0);
+  const humidity = forecastData.main.humidity;
+  const windSpeed = Math.round(((forecastData.wind.speed * 60 * 60) / 1000) * 100) / 100;
+  const windDirection = forecastData.wind.deg;
+  const htmlCurrent = `
   <div class="cityName">${forecastData.name}</div>
   <div class="description">${currentDescription}: ${tempMin}°C / ${tempMax}°C</div>
   <div class="rows">
@@ -136,7 +136,7 @@ async function currentWeatherHTML(position) {
 
 async function moonPhase(moonURL) {
   const moonData = await getData(moonURL);
-  let htmlCurrent = `<div class="rows"><div>Moon Phase:</div><div class="moonPhase"><svg width="50" height="50" viewBox="0 0 100 100">${moonData.svg}</svg></div><div>${moonData.npWidget}</div></div>`;
+  const htmlCurrent = `<div class="rows"><div>Moon Phase:</div><div class="moonPhase"><svg width="50" height="50" viewBox="0 0 100 100">${moonData.svg}</svg></div><div>${moonData.npWidget}</div></div>`;
   document.getElementById('moonphase').innerHTML = htmlCurrent;
 }
 

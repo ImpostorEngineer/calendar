@@ -25,20 +25,21 @@ body::-webkit-scrollbar {
 #time {
   font-size: 4rem;
   font-weight: 900;
-  color: orangered;
+  color: #ff4500;
 }
 #date {
   text-transform: uppercase;
   font-weight: 900;
   font-size: 2rem;
   padding: 5px;
-  color: orangered;
+  color: #ff4500;
 }
 .cityName {
   padding: 5px;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 900;
-  color: orangered;
+  color: #ff4500;
+  text-transform: uppercase;
 }
 .calendar {
   width: 65%;
@@ -58,7 +59,7 @@ body::-webkit-scrollbar {
   font-weight: 900;
   font-size: 2rem;
   padding: 5px;
-  color: orangered;
+  color: #ff4500;
 }
 .eventRow:nth-child(2n) {
   background-color: #111;
@@ -106,7 +107,7 @@ body::-webkit-scrollbar {
 .weatherTitle {
   font-size: 2rem;
   font-weight: bold;
-  color: orangered;
+  color: #ff4500;
   text-transform: uppercase;
 }
 .date-top {
