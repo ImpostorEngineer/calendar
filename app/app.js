@@ -62,7 +62,7 @@ router.get('/calendar/:email', async (req, res, next) => {
   const calendar2 = await calendar.events.list({
     calendarId: GOOGLE_CALENDAR_ID2,
     timeMin: new Date().toISOString(),
-    maxResults: 10,
+    maxResults: 20,
     singleEvents: true,
     showDeleted: false,
     orderBy: 'startTime',

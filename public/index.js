@@ -159,7 +159,7 @@ async function getCalendarData(account) {
   }, {});
 
   let dayDetails = '';
-  for (days in finalListofEvents) {
+  for (days in finalListofEvents.slice(0, 10)) {
     let eventDetails = '';
     finalListofEvents[days]['events'].forEach((event) => {
       const calendarTime = new Date(event.sortDate);
