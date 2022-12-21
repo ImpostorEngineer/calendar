@@ -1,13 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const account = urlParams.get('account');
-
-const lon = '-73.4529';
-const lat = '44.6995';
-// const URL = `https://api.openweathermap.org/forecastData/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 const iconURL = 'https://openweathermap.org/img/wn/';
-
-// let currentURL = '/api/current';
-// let forecastURL = '/api/forecast';
 const moonURL = '/api/moon';
 
 function getLocation() {
@@ -40,12 +33,11 @@ function createDateComponents(dateNum, utc) {
   }
   const date = new Date(dateNum * 1000);
   const month = months[date.getMonth()];
-  const dayOftheWeek = days[date.getDay()];
+  const dayOfTheWeek = days[date.getDay()];
   const day = date.getDate();
   const hour = date.getHours();
   const mins = date.getMinutes().toString().padStart(2, '0');
-  // let dateTxt = `${dayOftheWeek}, ${month} ${day} ${hour}`;
-  return { dayOftheWeek, month, day, hour, mins };
+  return { dayOfTheWeek, month, day, hour, mins };
 }
 
 function getTime() {
@@ -53,18 +45,16 @@ function getTime() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const month = months[currentTime.getMonth()];
-  const dayOftheWeek = days[currentTime.getDay()];
+  const dayOfTheWeek = days[currentTime.getDay()];
   const day = currentTime.getDate();
   const hour = currentTime.getHours();
   const mins = currentTime.getMinutes().toString().padStart(2, '0');
   document.getElementById('time').innerHTML = `${hour}:${mins}`;
-  document.getElementById('date').innerHTML = `${dayOftheWeek},<br />${month} ${day}`;
+  document.getElementById('date').innerHTML = `${dayOfTheWeek},<br />${month} ${day}`;
 }
 
 async function weatherForecastHTML(position) {
   const forecastURL = `/api/forecast/${position.coords.latitude}/${position.coords.longitude}`;
-
-  // http://openweathermap.org/img/wn/10d@2x.png
   const forecastData = await getData(forecastURL);
   forecastData.list.map((day, index, array) => {
     day.currentDay = new Date(day.dt * 1000).getDay();
@@ -88,16 +78,16 @@ async function weatherForecastHTML(position) {
   let htmlForecast = '';
   for (let i = 0; i < forecastData.list.length; i += 8) {
     let dateNum = forecastData.list[i].dt;
-    let { dayOftheWeek, month, day, hour } = createDateComponents(dateNum, 'utc');
-    const daysMinTemp = Math.min(...minMaxTemps[dayOftheWeek]['min']);
-    const daysMaxTemp = Math.max(...minMaxTemps[dayOftheWeek]['max']);
+    let { dayOfTheWeek, month, day, hour } = createDateComponents(dateNum, 'utc');
+    const daysMinTemp = Math.min(...minMaxTemps[dayOfTheWeek]['min']);
+    const daysMaxTemp = Math.max(...minMaxTemps[dayOfTheWeek]['max']);
     let iconValue = forecastData.list[i].weather[0].icon;
     let tempMin = Math.round(daysMinTemp);
     let tempMax = Math.round(daysMaxTemp);
     let weatherDescription = forecastData.list[i].weather[0].description;
     let weatherIcon = `${iconURL}${iconValue}@2x.png`;
     htmlForecast += `<div class="dayWeather">
-                    <div><div class="dayDate">${dayOftheWeek}</div><div class="forecastDescription">${weatherDescription}</div></div>
+                    <div><div class="dayDate">${dayOfTheWeek}</div><div class="forecastDescription">${weatherDescription}</div></div>
                     <div class="forecastWeatherIcon"><img src="${weatherIcon}"></div>
                     <div class="dayTemp">${tempMax} / ${tempMin} °C</div>
                     </div>`;
@@ -143,12 +133,12 @@ async function moonPhase(moonURL) {
 async function getCalendarData(account) {
   if (!account) {
     document.getElementById('calendar').innerHTML =
-      "<div class='calendarRow'><div class='dayoftheMonth'>NEED AN ACCOUNT.</div></div>";
+      "<div class='calendarRow'><div class='dayOfTheMonth'>NEED AN ACCOUNT.</div></div>";
     return;
   }
   const calendarURL = `/api/calendar/${account}`;
   const data = await getData(calendarURL);
-  const finalListofEvents = data.reduce(function (obj, day) {
+  const finalListOfEvents = data.reduce(function (obj, day) {
     const theday = day.formattedDate;
     if (!obj[theday]) {
       obj[theday] = { events: [day] };
@@ -158,10 +148,28 @@ async function getCalendarData(account) {
     return obj;
   }, {});
 
+  const eventList = Object.entries(finalListOfEvents).slice(0, 10);
+
+  const dayNameList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthNameList = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
   let dayDetails = '';
-  for (days in finalListofEvents.slice(0, 10)) {
+  eventList.map((day) => {
     let eventDetails = '';
-    finalListofEvents[days]['events'].forEach((event) => {
+    day[1]['events'].forEach((event) => {
       const calendarTime = new Date(event.sortDate);
       let startTime = calendarTime.toTimeString().split(':').slice(0, 2).join(':');
       let endTime = new Date(event.endTime).toTimeString().split(':').slice(0, 2).join(':');
@@ -169,32 +177,23 @@ async function getCalendarData(account) {
         startTime = '';
         endTime = '';
       }
-      // const endTime = (calendarTime + 1000 * 30 * 60).toLocaleTimeString();
+      let location = '';
+      if (event.location) {
+        if (event.location.length < 40) {
+          location = ` - ${event.location.toUpperCase()}`;
+        }
+      }
       const summary = event.summary.toUpperCase();
-      eventDetails += `<div class='eventRow'><div class='calendarSummary'>${summary}</div><div class='calendarTime'>${startTime} - ${endTime}</div></div>`;
+      eventDetails += `<div class='eventRow'><div class='calendarSummary'>${summary}${location}</div><div class='calendarTime'>${startTime} - ${endTime}</div></div>`;
     });
-    const dayNameList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const monthNameList = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
+
     const offset = new Date().getTimezoneOffset();
-    const convertedDate = new Date(Date.parse(days) + offset * 60 * 1000);
+    const convertedDate = new Date(Date.parse(day[0]) + offset * 60 * 1000);
     const monthName = monthNameList[convertedDate.getMonth()];
-    const dayofMonth = convertedDate.getDate();
+    const dayOfMonth = convertedDate.getDate();
     const dayName = dayNameList[convertedDate.getDay()];
-    dayDetails += `<div class='calendarRow'><div class="dayoftheMonth">${dayName}, ${monthName} ${dayofMonth}</div>${eventDetails}</div>`;
-  }
+    dayDetails += `<div class='calendarRow'><div class="dayOfTheMonth">${dayName}, ${monthName} ${dayOfMonth}</div>${eventDetails}</div>`;
+  });
   document.getElementById('calendar').innerHTML = dayDetails;
 }
 
